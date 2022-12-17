@@ -91,73 +91,73 @@ describe(`croose test`, () => {
     })
   })
 
-  describe(`Simple CRUD - users`, () => {
-    it('should create', (done) => {
-      users._create(data.users[3])
-        .then(doc => {
-          expect(doc.createdAt).toBeDefined()
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
+  // describe(`Simple CRUD - users`, () => {
+  //   it('should create', (done) => {
+  //     users._create(data.users[3])
+  //       .then(doc => {
+  //         expect(doc.createdAt).toBeDefined()
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
 
-    it('should read', (done) => {
-      users._read(data.users[3]._id)
-        .then(doc => {
-          expect(data.users[3]._id).toBe(doc._id)
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
+  //   it('should read', (done) => {
+  //     users._read(data.users[3]._id)
+  //       .then(doc => {
+  //         expect(data.users[3]._id).toBe(doc._id)
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
 
-    it('should update - trace changes', (done) => {
-      users._update({ _id: data.users[3]._id }, { name: 'foo' })
-        .then(doc => {
-          expect(doc.name).toBe('foo')
+  //   it('should update - trace changes', (done) => {
+  //     users._update({ _id: data.users[3]._id }, { name: 'foo' })
+  //       .then(doc => {
+  //         expect(doc.name).toBe('foo')
 
-          expect(doc.modifieds).toBeDefined()
-          expect(doc.changeLog).toBeDefined()
+  //         expect(doc.modifieds).toBeDefined()
+  //         expect(doc.changeLog).toBeDefined()
 
-          expect(doc.modifieds[0]).toBe('name')
-          expect(doc.changeLog.name.to).toBe('foo')
-          expect(doc.changeLog.name.from).toBe('James')
+  //         expect(doc.modifieds[0]).toBe('name')
+  //         expect(doc.changeLog.name.to).toBe('foo')
+  //         expect(doc.changeLog.name.from).toBe('James')
 
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
 
-    it('should count', (done) => {
-      users._count({})
-        .then(count => {
-          expect(count).toBe(1)
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
+  //   it('should count', (done) => {
+  //     users._count({})
+  //       .then(count => {
+  //         expect(count).toBe(1)
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
 
-    it('should search', (done) => {
-      users._search({})
-        .then(ret => {
-          expect(ret.count).toBeDefined()
-          expect(ret.pages).toBeDefined()
-          expect(ret.limit).toBeDefined()
-          expect(ret.page).toBeDefined()
-          ret.data.should.be.Array()
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
+  //   it('should search', (done) => {
+  //     users._search({})
+  //       .then(ret => {
+  //         expect(ret.count).toBeDefined()
+  //         expect(ret.pages).toBeDefined()
+  //         expect(ret.limit).toBeDefined()
+  //         expect(ret.page).toBeDefined()
+  //         ret.data.should.be.Array()
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
 
-    it('should delete', (done) => {
-      users._delete({ _id: data.users[3]._id})
-        .then(ret => {
-          expect(ret).toBe(true)
-          done()
-        })
-        .catch(err => should.ifError(err))
-    })
-  })
+  //   it('should delete', (done) => {
+  //     users._delete({ _id: data.users[3]._id})
+  //       .then(ret => {
+  //         expect(ret).toBe(true)
+  //         done()
+  //       })
+  //       .catch(err => should.ifError(err))
+  //   })
+  // })
 
   describe(`Expand`, () => {
     beforeAll(done => {
@@ -278,9 +278,10 @@ describe(`croose test`, () => {
           .catch(err => should.ifError(err))
       })
 
-      it(`should expand nested array subDocument - '/?expand=createdBy.subDocArr.post.comments'`, (done) => {
+      it(`should expand nested array subDocument - '/?expand=createdBy.subDocArr*post.comments'`, (done) => {
         posts._read(data.posts[0]._id, { expand: 'createdBy.subDocArr.post.comments' })
           .then(doc => {
+            console.log(doc.createdBy.subDocArr)
             expect(doc.createdBy.subDocArr[0].post.comments[0]._id).toBeDefined()
             done()
           })
